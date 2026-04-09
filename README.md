@@ -1,3 +1,3 @@
 ## 🎬 Demo
 
-![Console App Demo](assets/StudentManagement.gif)
+![Console App Demo](Assets/StudentManagement.gif)
