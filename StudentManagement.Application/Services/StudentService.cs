@@ -1,33 +1,35 @@
-﻿using StudentManagement.Domain.Models;
+﻿using StudentManagement.Application.Interfaces;
+using StudentManagement.Domain.Models;
 using StudentManagement.Infrastructure.Data;
 
 namespace StudentManagement.Application.Services;
 
-public class StudentService
+public class StudentService : IStudentService
 {
-    public DbContext DbContext { get; set; }
+    private readonly DbContext _context;
 
-    public StudentService()
+    public StudentService(DbContext context)
     {
-        this.DbContext = new DbContext();
+        _context = context;
     }
 
     public void AddStudent(Student student)
     {
-        this.DbContext.Students.Add(student);
+        student.Id = _context.Students.Any() ? _context.Students.Max(s => s.Id) + 1 : 1;
+        _context.Students.Add(student);
     }
 
     public List<Student> GetAllStudents() =>
-        this.DbContext.Students;
+        _context.Students;
 
     public Student GetStudentById(int id) =>
-       this.DbContext.Students.FirstOrDefault(s => s.Id == id);
+       _context.Students.FirstOrDefault(s => s.Id == id);
 
-    public List<Student> SearchByText(string searchText) =>
-        this.DbContext.Students
+    public List<Student> SearchByText(string text) =>
+        _context.Students
             .Where(s =>
-            s.FirstName.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
-            s.LastName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                s.FirstName.Contains(text, StringComparison.OrdinalIgnoreCase) ||
+                s.LastName.Contains(text, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
     public bool UpdateStudent(Student student)
@@ -56,12 +58,7 @@ public class StudentService
             return false;
         }
 
-        this.DbContext.Students.Remove(student);
+        _context.Students.Remove(student);
         return true;
-    }
-
-    public void PrintInfo(Student student)
-    {
-        Console.WriteLine($"Student Id: {student.Id}, Full Name: {student.FirstName} {student.LastName}, Code: {student.Code}, Email: {student.Email}");
     }
 }

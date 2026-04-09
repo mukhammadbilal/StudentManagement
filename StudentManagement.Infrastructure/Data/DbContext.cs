@@ -4,14 +4,16 @@ namespace StudentManagement.Infrastructure.Data;
 
 public class DbContext
 {
-    public List<Student> Students { get; private set; }
-
     public DbContext()
     {
         this.Students = new List<Student>();
+        this.Teachers = new List<Teacher>();
 
         SeedData();
     }
+
+    public List<Student> Students { get; private set; }
+    public List<Teacher> Teachers { get; private set; }
 
     private void SeedData()
     {
@@ -30,6 +32,12 @@ public class DbContext
             new Student { Id = 8, FirstName = "Henry", LastName = "Moore", Code = "STU008", Email = "henry.moore@example.com" },
             new Student { Id = 9, FirstName = "Ivy", LastName = "Taylor", Code = "STU009", Email = "ivy.taylor@example.com" },
             new Student { Id = 10, FirstName = "Jack", LastName = "Anderson", Code = "STU010", Email = "jack.anderson@example.com" }
+        });
+
+        Teachers.AddRange(new List<Teacher>
+        {
+            new Teacher { Id = 1, FirstName = "Jane", LastName = "Smith", Username = "admin", Password = "admin123" },
+            new Teacher { Id = 2, FirstName = "Johnson", LastName = "Smith", Username = "assistant", Password = "assis123" }
         });
 
     }
